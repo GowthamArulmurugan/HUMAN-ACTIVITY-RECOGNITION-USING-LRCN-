@@ -1,7 +1,3 @@
-Here's a comprehensive README file for your GitHub repository that includes Google Colab code for the "Human Activity Recognition Using Deep Learning Techniques" project:
-
----
-
 # Human Activity Recognition Using Deep Learning Techniques
 
 ## Overview
@@ -113,6 +109,3 @@ Visualizations of training loss, accuracy, and confusion matrices are provided i
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
-
-Feel free to adjust the README as needed to better align with your project specifics!

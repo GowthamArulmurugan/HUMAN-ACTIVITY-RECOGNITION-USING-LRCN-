@@ -1,7 +1,7 @@
-# Human Activity Recognition Using Deep Learning Techniques
+# Human Activity Recognition Using LRCN
 
 ## Overview
-This repository contains the implementation of **Human Activity Recognition (HAR)** using **Long Short-Term Memory Recurrent Convolutional Networks (LRCN)** in Python. The project is focused on accurately classifying human activities using video data, leveraging the UCF50 dataset. The developed model demonstrates significant performance improvements compared to traditional approaches like ConvLSTM, achieving an impressive accuracy rate of 96%.
+This implementation focuses exclusively on **Human Activity Recognition (HAR)** using **Long Short-Term Memory Recurrent Convolutional Networks (LRCN)**. By leveraging the UCF50 dataset, this model achieves state-of-the-art results in classifying human activities from video data with a remarkable accuracy of **96%**.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -9,7 +9,8 @@ This repository contains the implementation of **Human Activity Recognition (HAR
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Preprocessing](#preprocessing)
-- [Model Training](#model-training)
+- [Model Architecture](#model-architecture)
+- [Training and Evaluation](#training-and-evaluation)
 - [Results](#results)
 - [Future Work](#future-work)
 - [References](#references)
@@ -18,94 +19,82 @@ This repository contains the implementation of **Human Activity Recognition (HAR
 ---
 
 ## Dataset
-We utilize the [**UCF50 Dataset**](https://www.crcv.ucf.edu/data/UCF50.php) for this project. It includes a diverse collection of video clips depicting 50 distinct human actions such as walking, running, playing tennis, etc.
+The UCF50 dataset is a rich video dataset containing 50 action categories such as walking, running, playing basketball, etc.
 
-- **Download Instructions**: The dataset is not included in this repository. You can download it directly from the [UCF website](https://www.crcv.ucf.edu/data/UCF50.php). Extract the dataset into the `data/` directory before running the code.
-
-## Project Structure
-```
-├── data/                    # Directory to store UCF50 dataset
-├── notebooks/
-│   ├── HAR_LRCN_Model.ipynb # Google Colab notebook for training LRCN model
-│   ├── HAR_ConvLSTM_Model.ipynb # Google Colab notebook for training ConvLSTM model
-├── utils/
-│   ├── data_preprocessing.py # Code for preprocessing video data
-│   ├── model_training.py     # Code for training models
-├── requirements.txt          # List of required Python packages
-├── README.md                 # Project documentation
-└── LICENSE                   # License file
+- **Instructions**: Download the dataset from the [UCF50 dataset page](https://www.crcv.ucf.edu/data/UCF50.php) and place it in the `data/` folder.
 ```
 
 ## Getting Started
 
 ### Prerequisites
 - Python 3.x
-- Google Colab
 - TensorFlow, Keras, OpenCV, Matplotlib, NumPy, and Pandas
 
-You can install the necessary libraries using:
+Install required packages:
 ```bash
 pip install -r requirements.txt
 ```
 
-### Running the Code on Google Colab
-To run the project on Google Colab:
-1. Open the `HAR_LRCN_Model.ipynb` or `HAR_ConvLSTM_Model.ipynb` notebook in Google Colab.
-2. Ensure the dataset is uploaded to your Colab environment or Google Drive.
-3. Follow the instructions provided in the notebooks to run the cells and train the models.
+### Running on Google Colab
+1. Open the `HAR_LRCN_Model.ipynb` notebook in Google Colab.
+2. Upload the dataset to Google Drive or Colab's file system.
+3. Follow the notebook instructions for data preprocessing and training.
 
 ## Preprocessing
-Data preprocessing is a crucial step to ensure high-quality input for the model. It involves:
-- **Reading video files** from the dataset.
-- **Resizing frames** to a fixed size (e.g., 64x64 pixels).
-- **Normalizing pixel values** to a range between 0 and 1.
-- **Data augmentation** (optional) to improve model robustness.
+Video preprocessing includes:
+- **Frame extraction**: Capture key frames from videos.
+- **Resizing**: Frames are resized to 64x64 pixels.
+- **Normalization**: Pixel values are scaled to [0, 1].
+- **Sequence preparation**: Videos are segmented into sequences for LSTM input.
 
-These steps are implemented in the `data_preprocessing.py` script.
+Run the preprocessing script in `data_preprocessing.py` or within the notebook.
 
-## Model Training
-We have implemented two models:
-1. **ConvLSTM**: Combines Convolutional and LSTM layers to capture spatial and temporal features.
-2. **LRCN (Long-term Recurrent Convolutional Networks)**: Extracts spatial features using CNN layers and temporal dependencies using LSTM layers.
+## Model Architecture
+The **LRCN** model combines Convolutional Neural Networks (CNN) for spatial feature extraction and Long Short-Term Memory (LSTM) layers for temporal sequence learning:
 
-Both models are trained using:
-- **Adam optimizer**
-- **Categorical cross-entropy loss**
-- **Early stopping** and **dropout regularization** to prevent overfitting.
+- **CNN Backbone**:
+  - Input: Resized video frames (e.g., 64x64x3).
+  - Layers: Convolutional layers with ReLU activation and max-pooling for spatial feature extraction.
+- **LSTM Head**:
+  - Input: Sequential features from CNN.
+  - Layers: LSTM layers to capture temporal dependencies in video sequences.
+- **Output**:
+  - Fully connected (Dense) layer with softmax activation for multi-class classification.
 
-### Training on Google Colab
-Simply run the code in the notebooks:
-- For **ConvLSTM**: `HAR_ConvLSTM_Model.ipynb`
-- For **LRCN**: `HAR_LRCN_Model.ipynb`
+### Hyperparameters
+- Optimizer: **Adam**
+- Loss: **Categorical Cross-Entropy**
+- Batch size: **32**
+- Epochs: **50**
+- Regularization: Dropout layers to mitigate overfitting.
+
+## Training and Evaluation
+1. Load preprocessed data.
+2. Train the LRCN model using `HAR_LRCN_Model.ipynb`.
+3. Monitor training using accuracy and loss plots.
+4. Evaluate the model using metrics like:
+   - **Accuracy**: 96% achieved on the test set.
+   - **Confusion Matrix**: Visualize classification performance.
 
 ## Results
-The performance of the models on the test set is summarized below:
+| Metric       | Value       |
+|--------------|-------------|
+| **Accuracy** | **96%**     |
+| Loss         | Minimal     |
 
-| Model       | Accuracy | Processing Speed | Adaptability |
-|-------------|----------|------------------|--------------|
-| ConvLSTM    | 74%     | Slower           | Limited      |
-| **LRCN**    | **96%** | Faster           | Yes          |
+The LRCN model significantly outperforms traditional ConvLSTM-based methods in both accuracy and speed, making it suitable for real-time applications.
 
-- **LRCN Model** achieved an accuracy of **96%**, outperforming the ConvLSTM model which achieved **74%**.
-- The LRCN model demonstrated faster training and real-time detection capabilities due to reduced layers and optimized preprocessing.
-
-### Evaluation Metrics
-- **Accuracy**: Proportion of correct predictions.
-- **Loss**: Indicates model performance over epochs.
-- **Confusion Matrix**: Assesses classification errors.
-
-Visualizations of training loss, accuracy, and confusion matrices are provided in the Colab notebooks.
+### Visualizations
+Training progress, confusion matrix, and misclassification examples are available in the notebook.
 
 ## Future Work
-- **Multi-person Activity Recognition**: Extend the model to recognize actions performed by multiple individuals simultaneously.
-- **Real-time Deployment**: Optimize the model for deployment on edge devices with limited computational resources.
-- **Improved Annotations**: Incorporate detailed annotations, such as bounding box coordinates for better activity recognition.
+- **Multi-person Activity Recognition**: Extend the model for simultaneous detection of multiple actions.
+- **Real-time Inference**: Optimize for low-latency predictions on edge devices.
+- **Dataset Expansion**: Include more diverse datasets to generalize better.
 
 ## References
 1. Aboo, Adeeba Kh, and Laheeb M. Ibrahim. "Human Activity Recognition Using A Hybrid CNN-LSTM Deep Neural Network." *Webology* (2022).
 2. Xia, Kun, Jianguang Huang, and Hanyu Wang. "LSTM-CNN architecture for human activity recognition." *IEEE Access* 8 (2020): 56855-56866.
-3. Perez-Gamboa, Sonia, et al. "Improved sensor-based human activity recognition via hybrid CNN-RNN models." *IEEE Symposium on Inertial Sensors* (2021).
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
